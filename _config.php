@@ -7,7 +7,7 @@ use SLONline\CallToActions\CallToAction;
 
 // Avoid creating global variables
 call_user_func(function () {
-    $module = ModuleLoader::inst()->getManifest()->getModule('slonline/calltoaction');
+    $module = ModuleLoader::inst()->getManifest()->getModule('slonline/silverstripe-calltoaction');
     // Re-enable media dialog
     $config = TinyMCEConfig::get('cms');
     $config->enablePlugins([
