@@ -1,0 +1,7 @@
+{
+  "settings": {
+    "import/resolver": {
+	"import/resolver": "webpack"
+    }
+  }
+}

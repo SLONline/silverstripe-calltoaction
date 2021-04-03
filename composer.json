@@ -1,0 +1,33 @@
+{
+  "name": "slonline/silverstripe-calltoaction",
+  "description": "Silverstripe 4 Module for adding call to action blocks via html editor",
+  "minimum-stability": "dev",
+  "license": "proprietary",
+  "type": "silverstripe-vendormodule",
+  "authors": [
+    {
+      "name": "Lubos Odraska",
+      "email": "odraska@slonline.sk"
+    }
+  ],
+  "require": {
+    "silverstripe/framework": "^4.0",
+    "silverstripe/admin": "^1.0",
+    "silverstripe/versioned": "^1@dev",
+    "silverstripe/vendor-plugin": "^1.0",
+    "php": "^7.1 || ^8"
+  },
+  "require-dev": {
+    "sminnee/phpunit": "^5.7"
+  },
+  "extra": {
+    "expose": [
+      "client"
+    ]
+  },
+  "autoload": {
+    "psr-4": {
+      "SLONline\\CallToActions\\": "src/"
+    }
+  }
+}

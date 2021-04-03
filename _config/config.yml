@@ -1,0 +1,11 @@
+SilverStripe\Control\Director:
+  rules:
+    'CallToActionController': SLONline\CallToActions\CallToActionController
+
+SilverStripe\Forms\HTMLEditor\HtmlEditorField:
+  extensions:
+    - SLONline\CallToActions\HtmlEditorField
+
+SilverStripe\View\Parsers\ShortcodeParser:
+  extensions:
+    - SLONline\CallToActions\ShortcodeParserExtension
