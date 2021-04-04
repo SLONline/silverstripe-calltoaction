@@ -172,6 +172,12 @@ jQuery.entwine('ss', ($) => {
 				return classes.split(',');
 			}
 		},
+		getCtaDataObjectClassName() {
+			return $(this).data('cta-dataobjectclassname');
+		},
+		getCtaDataObjectID() {
+			return $(this).data('cta-dataobjectid');
+		},
 		openCallToActionDialog(editor) {
 			let self = this,
 			    url = 'CallToActionController/CallToActionForm/forTemplate',
@@ -224,12 +230,16 @@ jQuery.entwine('ss', ($) => {
 		// load the shortcode form into the dialog
 		reloadForm(from, data) {
 			const postdata = {};
-			
+			const editor = this.getEditor();
+
 			if (from == 'type') {
 				postdata.CallToActionType = data;
 			} else if (from == 'shortcode') {
 				postdata.Shortcode = data;
 			}
+
+			postdata.DataObjectClassName = jQuery(`#${editor.getInstance().id}`).entwine('ss').getCtaDataObjectClassName();
+			postdata.DataObjectID = jQuery(`#${editor.getInstance().id}`).entwine('ss').getCtaDataObjectID();
 
 			this.addClass('loading');
 
@@ -282,6 +292,27 @@ jQuery.entwine('ss', ($) => {
 		// get the html to insert
 		getHTML() {
 			const data = this.getAttributes();
+
+			let content = null;
+			if (data.attributes['content']) {
+				content = data.attributes['content'];
+			}
+			const wrapped = (content !== null);
+			const properties = [];
+			for (const key in data.attributes) {
+				if (key != 'content') {
+					properties[key] = data.attributes[key];
+				}
+			}
+
+			const shortcode = ShortcodeSerialiser.serialise({
+				name: data.shortcodeType,
+				properties: properties,
+				content: content,
+				wrapped: wrapped
+			}, true);
+			return shortcode;
+
 			let html = data.shortcodeType;
 			for (const key in data.attributes) {
 				html += ` ${key}="${data.attributes[key]}"`;
@@ -379,14 +410,6 @@ jQuery.entwine('ss', ($) => {
 				editor.selection.moveToBookmark(this.parent().getBookmark());
       			
       			this.setSelection(editor.selection.getNode());
-
-				/*var ed = this.getEditor();
-				//ed.onopen();
-				
-				this.setSelection(ed.getSelectedNode());
-				this.setBookmark(ed.createBookmark());
-
-				ed.blur();*/
 
 				this.find(':input:not(:submit)[data-skip-autofocus!="true"]').filter(':visible:enabled').eq(0).focus();
 

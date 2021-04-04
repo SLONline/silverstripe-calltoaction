@@ -211,6 +211,7 @@ class CallToActionController extends LeftAndMain
         $fields->push(LiteralField::create('shortcodablefieldsend', '</div>'));
         
         if ($data = $this->getShortcodeData()) {
+            $data['atts']['content'] = trim($data['content'], '"');
             $form->loadDataFrom($data['atts']);
             
             // special treatment for setting value of UploadFields
