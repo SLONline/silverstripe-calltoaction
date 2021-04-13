@@ -46,23 +46,22 @@ const plugin = {
 				placeholderClasses.forEach((code) => {
 					let match = null;
 					let counter = 0;
-					while ((match = ShortcodeSerialiser.match(code, true, content)) && counter < 1000) {
-						counter +=1;
+					while ((match = ShortcodeSerialiser.match(code, true, content)) && counter < 100) {
+						counter += 1;
 						if (match) {
-							const params = [];
 							const url = encodeURI(`CallToActionController/shortcodePlaceHolder/${code}`);
 							$.ajax({
 								url,
-								type       : 'POST',
-								data       : JSON.stringify(match),
+								type: 'POST',
+								data: JSON.stringify(match),
 								contentType: 'application/json; charset=utf-8',
-								async      : false,
+								async: false,
 								success(html) {
 									html = $($(html));
 									html.attr('data-cta-shortcode', match.name);
 									html.attr('data-cta-shortcode-wrapped', match.wrapped);
 									html.attr('data-cta-shortcode-properties', JSON.stringify(match.properties));
-									html.attr('data-cta-shortcode-content', JSON.stringify(match.content));
+									html.attr('data-cta-shortcode-content', encodeURI(match.content));
 									content = content.replaceAll(match.original, html.prop('outerHTML'));
 								}
 							});
@@ -70,23 +69,22 @@ const plugin = {
 					}
 
 					counter = 0;
-					while ((match = ShortcodeSerialiser.match(code, false, content)) && counter < 1000) {
-						counter +=1;
+					while ((match = ShortcodeSerialiser.match(code, false, content)) && counter < 100) {
+						counter += 1;
 						if (match) {
-							const params = [];
 							const url = encodeURI(`CallToActionController/shortcodePlaceHolder/${code}`);
 							$.ajax({
 								url,
-								type       : 'POST',
-								data       : JSON.stringify(match),
+								type: 'POST',
+								data: JSON.stringify(match),
 								contentType: 'application/json; charset=utf-8',
-								async      : false,
+								async: false,
 								success(html) {
 									html = $($(html));
 									html.attr('data-cta-shortcode', match.name);
 									html.attr('data-cta-shortcode-wrapped', match.wrapped);
 									html.attr('data-cta-shortcode-properties', JSON.stringify(match.properties));
-									html.attr('data-cta-shortcode-content', JSON.stringify(match.content));
+									html.attr('data-cta-shortcode-content', encodeURI(match.content));
 									content = content.replaceAll(match.original, html.prop('outerHTML'));
 								}
 							});
@@ -105,14 +103,14 @@ const plugin = {
 				const code = $elm.data('cta-shortcode');
 				const wrapped = $elm.data('cta-shortcode-wrapped');
 				const properties = $elm.data('cta-shortcode-properties');
-				const content = $elm.data('cta-shortcode-content');
+				const content = decodeURI($elm.data('cta-shortcode-content'));
 
 				const shortcode = ShortcodeSerialiser.serialise({
 					name: code,
-					properties: properties,
-					content: content,
-					wrapped: wrapped
-				}, true);
+					properties,
+					content,
+					wrapped
+				}, false);
 				$elm.replaceWith(shortcode);
 			});
 		});
@@ -294,8 +292,8 @@ jQuery.entwine('ss', ($) => {
 			const data = this.getAttributes();
 
 			let content = null;
-			if (data.attributes['content']) {
-				content = data.attributes['content'];
+			if (data.attributes.content) {
+				content = data.attributes.content;
 			}
 			const wrapped = (content !== null);
 			const properties = [];
@@ -307,10 +305,10 @@ jQuery.entwine('ss', ($) => {
 
 			const shortcode = ShortcodeSerialiser.serialise({
 				name: data.shortcodeType,
-				properties: properties,
-				content: content,
-				wrapped: wrapped
-			}, true);
+				properties,
+				content,
+				wrapped
+			}, false);
 			return shortcode;
 
 			let html = data.shortcodeType;
@@ -384,31 +382,31 @@ jQuery.entwine('ss', ($) => {
 		getCurrentShortcode() {
 			let selection = $(this.getSelection()),
 			    selectionText = selection.text();
-			    
+
 			if (selection.data('cta-shortcode') !== undefined) {
 				const $elm = selection;
 				const code = $elm.data('cta-shortcode');
 				const wrapped = $elm.data('cta-shortcode-wrapped');
 				const properties = $elm.data('cta-shortcode-properties');
-				const content = $elm.data('cta-shortcode-content');
+				const content = decodeURI($elm.data('cta-shortcode-content'));
 
 				const shortcode = ShortcodeSerialiser.serialise({
 					name: code,
-					properties: properties,
-					content: content,
-					wrapped: wrapped
-				}, true);
+					properties,
+					content,
+					wrapped
+				}, false);
 
 				return shortcode;
 			}
 			return selectionText;
 		},
 		fromDialog: {
-			onssdialogopen: function() {
-				let editor = this.getEditor().getInstance();
+			onssdialogopen() {
+				const editor = this.getEditor().getInstance();
 				this.setBookmark(this.parent().getBookmark());
 				editor.selection.moveToBookmark(this.parent().getBookmark());
-      			
+
       			this.setSelection(editor.selection.getNode());
 
 				this.find(':input:not(:submit)[data-skip-autofocus!="true"]').filter(':visible:enabled').eq(0).focus();
@@ -417,8 +415,8 @@ jQuery.entwine('ss', ($) => {
 				this.updateFromEditor();
 			},
 
-			onssdialogclose: function(){
-				var ed = this.getEditor();
+			onssdialogclose() {
+				const ed = this.getEditor();
 				ed.onclose();
 
 				ed.moveToBookmark(this.getBookmark());
