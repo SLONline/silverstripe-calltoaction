@@ -22,15 +22,15 @@ use SilverStripe\View\Parsers\ShortcodeParser;
 class CallToActionController extends LeftAndMain
 {
     private static $ca_url_segment = 'CallToActionController';
-    private static $required_permission_codes = 'CMS_ACCESS_LeftAndMain';
+    private static $required_permission_codes = false;
     
     /**
      * @var array
      */
     private static $allowed_actions = [
-        'CallToActionForm'     => 'CMS_ACCESS_LeftAndMain',
-        'handleEdit'           => 'CMS_ACCESS_LeftAndMain',
-        'shortcodePlaceHolder' => 'CMS_ACCESS_LeftAndMain',
+        'CallToActionForm',
+        'handleEdit',
+        'shortcodePlaceHolder',
     ];
     
     /**
@@ -261,5 +261,10 @@ class CallToActionController extends LeftAndMain
             
             return $object->getCallToActionPlaceHolder($data);
         }
+    }
+    
+    public function canView($member = null)
+    {
+        return true;
     }
 }
