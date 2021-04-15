@@ -14,8 +14,8 @@ const commandName = 'calltoaction';
 const plugin = {
 	init(editor) {
 		editor.addButton('calltoaction', {
-			text: i18n._t('CallToAction.ACTION_LABEL', '[CtA]'),
-			tooltip: i18n._t('CallToAction.ACTION_TOOLTIP', 'Insert Call to Action'),
+			text: i18n._t('CallToAction.ACTION_LABEL', 'Insert Special'),
+			tooltip: i18n._t('CallToAction.ACTION_TOOLTIP', 'Insert Special'),
 			icon: false,
 			class: 'mce_shortcode',
 			cmd: commandName
